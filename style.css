@@ -1,0 +1,14 @@
+#gameboard {
+    display: grid;
+    max-width: 900px;
+    margin: 0 auto;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
+    background: rgb(12, 218, 190);
+    border: 5px solid black;
+    border-radius: 4px;
+}    
+
+.cell {
+  height: 50px;
+}
