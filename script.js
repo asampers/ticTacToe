@@ -1,5 +1,5 @@
 const Cell = () => {
-  let value = 0;
+  let value = 'X';
 
   const addToken = (player) => {
     value = player;
@@ -75,7 +75,6 @@ const screenController = (() => {
     // Render board squares
     board.forEach((row, ind) => {
       row.forEach((cell, index) => {
-        // Anything clickable should be a button!!
         const cellButton = document.createElement("button");
         cellButton.classList.add("cell");
         // Create a data attribute to identify the column
@@ -90,5 +89,4 @@ const screenController = (() => {
   // Initial render
   updateScreen();
 
-})
-const play = screenController()
+})();
