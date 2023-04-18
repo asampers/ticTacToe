@@ -30,8 +30,10 @@ const gameboard = (() => {
   };
 
   const displayToken = (coord, player) => {
-    if (board[coord[0][coord[1]]]) return;
-    board[coord[0][coord[1]]].addToken(player);
+    let row = coord.split('')[0];
+    let column = coord.split('')[1];
+    if (board[row][column]) return;
+    board[row][column].addToken(player);
   };
 
   return {printBoard, getBoard, displayToken};
@@ -81,7 +83,7 @@ const screenController = (() => {
         cellButton.classList.add("cell");
         // Create a data attribute to identify the column
         // This makes it easier to pass into our `playRound` function 
-        cellButton.dataset.coord = `[${ind}][${index}]`;
+        cellButton.dataset.coord = `${ind}${index}`;
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
       })
