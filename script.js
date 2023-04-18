@@ -4,7 +4,7 @@ const gameboard = (() => {
   const display = () => {
     const rows = document.getElementById('gameboard');
     for (const child of rows.children) {
-      child.innerHTML = board[child.id - 1]
+      child.innerHTML = board[child.id]
     };
     };
   return { display };

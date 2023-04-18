@@ -1,6 +1,7 @@
 #gameboard {
     display: grid;
-    max-width: 900px;
+    width: 300px;
+    height: 300px;
     margin: 0 auto;
     grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,1fr);
@@ -10,5 +11,12 @@
 }    
 
 .cell {
-  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 2rem;
+  border: 1px solid grey;
+  background: lightyellow;
+  cursor: pointer;
 }
