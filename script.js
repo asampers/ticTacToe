@@ -1,5 +1,5 @@
 const Cell = () => {
-  let value = 'X';
+  let value = null;
 
   const addToken = (player) => {
     value = player;
@@ -29,13 +29,12 @@ const gameboard = (() => {
     console.log(boardWithCellValues);
   };
 
-  const display = () => {
-    const rows = document.getElementById('gameboard');
-    for (const child of rows.children) {
-      child.innerHTML = board[child.id]
-    };
-    };
-  return {display, printBoard, getBoard};
+  const displayToken = (coord, player) => {
+    if (board[coord[0][coord[1]]]) return;
+    board[coord[0][coord[1]]].addToken(player);
+  };
+
+  return {printBoard, getBoard, displayToken};
 })();
 
 const Player = (name, token) => {
@@ -47,13 +46,16 @@ const GameController = () => {
   const players = [Player('anna','X'), Player('andrew', 'O')];
   let activePlayer = players[0];
 
+  const getActivePlayer = () => activePlayer;
+  
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   }
 
-  const getActivePlayer = () => activePlayer;
-
-  return {getBoard: board.getBoard, getActivePlayer};
+  const playRound = (coord) => {
+    board.displayToken(coord, getActivePlayer().token);
+  }
+  return {getBoard: board.getBoard, getActivePlayer, playRound};
 }
 
 const screenController = (() => {
@@ -79,7 +81,7 @@ const screenController = (() => {
         cellButton.classList.add("cell");
         // Create a data attribute to identify the column
         // This makes it easier to pass into our `playRound` function 
-        cellButton.dataset.column = `[${ind},${index}]`;
+        cellButton.dataset.coord = `[${ind}][${index}]`;
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
       })
@@ -88,5 +90,7 @@ const screenController = (() => {
 
   // Initial render
   updateScreen();
-
+  return{game};
 })();
+
+//let board = gameboard.printBoard()
