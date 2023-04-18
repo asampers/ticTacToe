@@ -73,14 +73,14 @@ const screenController = (() => {
     playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
 
     // Render board squares
-    board.forEach(row => {
+    board.forEach((row, ind) => {
       row.forEach((cell, index) => {
         // Anything clickable should be a button!!
         const cellButton = document.createElement("button");
         cellButton.classList.add("cell");
         // Create a data attribute to identify the column
         // This makes it easier to pass into our `playRound` function 
-        cellButton.dataset.column = index
+        cellButton.dataset.column = `[${ind},${index}]`;
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
       })
@@ -91,6 +91,4 @@ const screenController = (() => {
   updateScreen();
 
 })
-//gameboard.display()
-gameboard.printBoard()
 const play = screenController()
