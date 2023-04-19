@@ -50,7 +50,12 @@ const message = ((player) => {
     return "Game Over - It's a draw"
   };
 
-  return {win, draw};
+  const displayOutcome = (item) => {
+    console.log(item)
+    alert(item === 'win' ? win() : draw());
+  }
+
+  return {displayOutcome};
 })
 
 const GameController = () => {
@@ -65,12 +70,27 @@ const GameController = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   }
 
-  
+  const playerHasWon = () => {
+    return winCombos.some((line) => 
+      line.every((position) => 
+        board.getBoard()[position].getValue() === getActivePlayer().token)
+    );
+  }
+
+  const gameIsTied = () => {
+    return (board.getBoard().every((cell) => cell.isOccupied()));
+  }
+
+  const endGameCheck = () => {
+    if (playerHasWon()) return 'win';
+    if (gameIsTied()) return 'draw';
+  }
 
   const playRound = (cell) => {
     board.displayToken(cell, getActivePlayer().token);
-    switchPlayerTurn();
     board.printBoard();
+    console.log(endGameCheck());
+    switchPlayerTurn();
   }
   return {getBoard: board.getBoard, getActivePlayer, playRound};
 }
@@ -79,14 +99,13 @@ const screenController = (() => {
   const game = GameController();
   const playerTurnDiv = document.querySelector('.turn');
   const boardDiv = document.querySelector('#gameboard');
-  const board = game.getBoard();
 
   const updateScreen = () => {
     // clear the board
     boardDiv.textContent = "";
 
   // get the newest version of the board and player turn
-    
+    const board = game.getBoard();
     const activePlayer = game.getActivePlayer();
 
     // Display player's turn
@@ -108,7 +127,7 @@ const screenController = (() => {
     const selectedCell = e.target.dataset.index;
     // Make sure I've clicked a column and not the gaps in between
     if (!selectedCell) return;
-    if (board[selectedCell].isOccupied()) {
+    if (game.getBoard()[selectedCell].isOccupied()) {
       return alert('Please select an open square!');
     }
     game.playRound(selectedCell);
