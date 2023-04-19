@@ -34,8 +34,6 @@ const gameboard = (() => {
   };
 
   const displayToken = (x, y, player) => {
-    console.log(board[x][y].isOccupied())
-    if (board[x][y].isOccupied()) return;
     board[x][y].addToken(player);
   };
 
@@ -69,13 +67,14 @@ const screenController = (() => {
   const game = GameController();
   const playerTurnDiv = document.querySelector('.turn');
   const boardDiv = document.querySelector('#gameboard');
+  const board = game.getBoard();
 
   const updateScreen = () => {
     // clear the board
     boardDiv.textContent = "";
 
   // get the newest version of the board and player turn
-    const board = game.getBoard();
+    
     const activePlayer = game.getActivePlayer();
 
     // Display player's turn
@@ -101,7 +100,9 @@ const screenController = (() => {
     const selectedColumn = e.target.dataset.column;
     // Make sure I've clicked a column and not the gaps in between
     if (!selectedColumn && !selectedRow) return;
-    
+    if (board[selectedRow][selectedColumn].isOccupied()) {
+      return alert('Please select an open square!');
+    }
     game.playRound(selectedRow, selectedColumn);
     updateScreen();
   }
