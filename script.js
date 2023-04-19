@@ -19,22 +19,19 @@ const gameboard = (() => {
   const columns = 3;
   const board = [];
   
-  for (let i = 0; i < rows; i++) {
-    board[i] = [];
-    for (let j = 0; j < columns; j++) {
-      board[i].push(Cell());
-    }
-  }
+  for (let i = 0; i < rows * columns; i++) {
+    board.push(Cell());
+  };
 
   const getBoard = () => board;
 
   const printBoard = () => {
-    const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()))
+    const boardWithCellValues = board.map((cell) => cell.getValue());
     console.log(boardWithCellValues);
   };
 
-  const displayToken = (x, y, player) => {
-    board[x][y].addToken(player);
+  const displayToken = (i, player) => {
+    board[i].addToken(player);
   };
 
   return {printBoard, getBoard, displayToken};
@@ -43,6 +40,10 @@ const gameboard = (() => {
 const Player = (name, token) => {
   return {name, token};
 }
+
+const gameLogic = (() => {
+  const winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+})
 
 const GameController = () => {
   const board = gameboard;
@@ -55,8 +56,8 @@ const GameController = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   }
 
-  const playRound = (x, y) => {
-    board.displayToken(x, y, getActivePlayer().token);
+  const playRound = (cell) => {
+    board.displayToken(cell, getActivePlayer().token);
     switchPlayerTurn();
     board.printBoard();
   }
@@ -81,29 +82,25 @@ const screenController = (() => {
     playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
 
     // Render board squares
-    board.forEach((row, ind) => {
-      row.forEach((cell, index) => {
+    board.forEach((cell, index) => {
         const cellButton = document.createElement("button");
         cellButton.classList.add("cell");
         // Create a data attribute to identify the row and column
-        cellButton.dataset.row = ind;
-        cellButton.dataset.column = index;
+        cellButton.dataset.index = index;
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
-      })
     })
-  } 
+  }
 
   // Add event listener for the board
   function clickHandlerBoard(e) {
-    const selectedRow = e.target.dataset.row
-    const selectedColumn = e.target.dataset.column;
+    const selectedCell = e.target.dataset.index;
     // Make sure I've clicked a column and not the gaps in between
-    if (!selectedColumn && !selectedRow) return;
-    if (board[selectedRow][selectedColumn].isOccupied()) {
+    if (!selectedCell) return;
+    if (board[selectedCell].isOccupied()) {
       return alert('Please select an open square!');
     }
-    game.playRound(selectedRow, selectedColumn);
+    game.playRound(selectedCell);
     updateScreen();
   }
   boardDiv.addEventListener("click", clickHandlerBoard);
