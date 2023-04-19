@@ -5,9 +5,13 @@ const Cell = () => {
     value = player;
   };
 
+  const isOccupied = () => {
+    return (value === null) ? false : true;
+  }
+
   const getValue = () => value;
 
-  return {addToken, getValue};
+  return {addToken, getValue, isOccupied};
 }
 
 const gameboard = (() => {
@@ -30,7 +34,8 @@ const gameboard = (() => {
   };
 
   const displayToken = (x, y, player) => {
-    if (!board[x][y] === null) return;
+    console.log(board[x][y].isOccupied())
+    if (board[x][y].isOccupied()) return;
     board[x][y].addToken(player);
   };
 
