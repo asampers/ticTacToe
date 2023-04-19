@@ -41,13 +41,22 @@ const Player = (name, token) => {
   return {name, token};
 }
 
-const gameLogic = (() => {
-  const winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+const message = ((player) => {
+  const win = () => {
+    return `Congratulations ${player}! You won!`
+  };
+
+  const draw = () => {
+    return "Game Over - It's a draw"
+  };
+
+  return {win, draw};
 })
 
 const GameController = () => {
   const board = gameboard;
   const players = [Player('anna','X'), Player('andrew', 'O')];
+  const winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
   let activePlayer = players[0];
 
   const getActivePlayer = () => activePlayer;
@@ -55,6 +64,8 @@ const GameController = () => {
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   }
+
+  
 
   const playRound = (cell) => {
     board.displayToken(cell, getActivePlayer().token);
