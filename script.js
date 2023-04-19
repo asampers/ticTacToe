@@ -29,11 +29,9 @@ const gameboard = (() => {
     console.log(boardWithCellValues);
   };
 
-  const displayToken = (coord, player) => {
-    let row = coord.split('')[0];
-    let column = coord.split('')[1];
-    if (board[row][column]) return;
-    board[row][column].addToken(player);
+  const displayToken = (x, y, player) => {
+    if (!board[x][y] === null) return;
+    board[x][y].addToken(player);
   };
 
   return {printBoard, getBoard, displayToken};
@@ -54,8 +52,10 @@ const GameController = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   }
 
-  const playRound = (coord) => {
-    board.displayToken(coord, getActivePlayer().token);
+  const playRound = (x, y) => {
+    board.displayToken(x, y, getActivePlayer().token);
+    switchPlayerTurn();
+    board.printBoard();
   }
   return {getBoard: board.getBoard, getActivePlayer, playRound};
 }
@@ -81,18 +81,29 @@ const screenController = (() => {
       row.forEach((cell, index) => {
         const cellButton = document.createElement("button");
         cellButton.classList.add("cell");
-        // Create a data attribute to identify the column
-        // This makes it easier to pass into our `playRound` function 
-        cellButton.dataset.coord = `${ind}${index}`;
+        // Create a data attribute to identify the row and column
+        cellButton.dataset.row = ind;
+        cellButton.dataset.column = index;
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
       })
     })
   } 
 
+  // Add event listener for the board
+  function clickHandlerBoard(e) {
+    const selectedRow = e.target.dataset.row
+    const selectedColumn = e.target.dataset.column;
+    // Make sure I've clicked a column and not the gaps in between
+    if (!selectedColumn && !selectedRow) return;
+    
+    game.playRound(selectedRow, selectedColumn);
+    updateScreen();
+  }
+  boardDiv.addEventListener("click", clickHandlerBoard);
+
   // Initial render
   updateScreen();
   return{game};
 })();
 
-//let board = gameboard.printBoard()
