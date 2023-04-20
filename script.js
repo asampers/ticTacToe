@@ -43,19 +43,24 @@ const Player = (name, token) => {
 
 const message = ((player) => {
   const win = () => {
-    return `Congratulations ${player}! You won!`
-  };
-
-  const draw = () => {
-    return "Game Over - It's a draw"
-  };
-
-  const displayOutcome = (item) => {
-    console.log(item)
-    alert(item === 'win' ? win() : draw());
+    return `Congratulations ${player}! You won!`;
   }
 
-  return {displayOutcome};
+  const draw = () => {
+    return "Game Over - It's a draw";
+  }
+
+  const occupied = () =>  {
+      return alert('Please select an open square!');
+  }
+
+  const displayOutcome = (item) => {
+    if (item === 'win') return alert(win());
+    if (item === 'draw') return alert(draw());
+    return;
+  }
+
+  return {displayOutcome, occupied};
 })
 
 const GameController = () => {
@@ -89,7 +94,8 @@ const GameController = () => {
   const playRound = (cell) => {
     board.displayToken(cell, getActivePlayer().token);
     board.printBoard();
-    console.log(endGameCheck());
+    let gameStatus = endGameCheck()
+    message((getActivePlayer().name)).displayOutcome(gameStatus);
     switchPlayerTurn();
   }
   return {getBoard: board.getBoard, getActivePlayer, playRound};
@@ -127,9 +133,7 @@ const screenController = (() => {
     const selectedCell = e.target.dataset.index;
     // Make sure I've clicked a column and not the gaps in between
     if (!selectedCell) return;
-    if (game.getBoard()[selectedCell].isOccupied()) {
-      return alert('Please select an open square!');
-    }
+    if (game.getBoard()[selectedCell].isOccupied()) return message().occupied();
     game.playRound(selectedCell);
     updateScreen();
   }
