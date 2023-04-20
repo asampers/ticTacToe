@@ -43,7 +43,7 @@ const Player = (name, token) => {
 
 const message = ((player) => {
   const win = () => {
-    return `Congratulations ${player}! You won!`;
+    return `Congratulations, ${player.toUpperCase()}! You won!`;
   }
 
   const draw = () => {
@@ -55,9 +55,8 @@ const message = ((player) => {
   }
 
   const displayOutcome = (item) => {
-    if (item === 'win') return alert(win());
-    if (item === 'draw') return alert(draw());
-    return;
+    if (item === 'win') return win();
+    if (item === 'draw') return draw();
   }
 
   return {displayOutcome, occupied};
@@ -106,16 +105,13 @@ const screenController = (() => {
   const playerTurnDiv = document.querySelector('.turn');
   const boardDiv = document.querySelector('#gameboard');
 
-  const updateScreen = () => {
+  const updateScreen = (gameStatus) => {
     // clear the board
     boardDiv.textContent = "";
 
   // get the newest version of the board and player turn
     const board = game.getBoard();
     const activePlayer = game.getActivePlayer();
-
-    // Display player's turn
-    playerTurnDiv.textContent = `${activePlayer.name}'s turn...\nPlease place your '${activePlayer.token}'`
 
     // Render board squares
     board.forEach((cell, index) => {
@@ -126,6 +122,13 @@ const screenController = (() => {
         cellButton.textContent = cell.getValue();
         boardDiv.appendChild(cellButton);
     })
+
+    if (gameStatus) {
+      endGame(gameStatus);
+    } else {
+    // Display player's turn
+    playerTurnDiv.textContent = `${activePlayer.name}'s turn...\nPlease place your '${activePlayer.token}'`
+    }
   }
 
   // Add event listener for the board
@@ -135,8 +138,20 @@ const screenController = (() => {
     if (!selectedCell) return;
     if (game.getBoard()[selectedCell].isOccupied()) return message().occupied();
     let gameStatus = game.playRound(selectedCell);
+    console.log(gameStatus);
     updateScreen(gameStatus);
   }
+
+  const endGame = (gameStatus) => {
+    playerTurnDiv.textContent = message((game.getActivePlayer().name)).displayOutcome(gameStatus);
+    boardDiv.removeEventListener("click", clickHandlerBoard);
+    const againButton = document.createElement("button");
+    againButton.classList.add("btn")
+    againButton.classList.add("btn-success")
+    againButton.textContent = 'Play Again?'
+    document.querySelector('.play-again').appendChild(againButton);
+  }
+
   boardDiv.addEventListener("click", clickHandlerBoard);
 
   // Initial render
