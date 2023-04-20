@@ -86,16 +86,16 @@ const GameController = () => {
     return (board.getBoard().every((cell) => cell.isOccupied()));
   }
 
-  const endGameCheck = () => {
+  const gameOver = () => {
     if (playerHasWon()) return 'win';
     if (gameIsTied()) return 'draw';
+    return null;
   }
 
   const playRound = (cell) => {
     board.displayToken(cell, getActivePlayer().token);
     board.printBoard();
-    let gameStatus = endGameCheck()
-    message((getActivePlayer().name)).displayOutcome(gameStatus);
+    if (gameOver()) return gameOver();
     switchPlayerTurn();
   }
   return {getBoard: board.getBoard, getActivePlayer, playRound};
@@ -115,7 +115,7 @@ const screenController = (() => {
     const activePlayer = game.getActivePlayer();
 
     // Display player's turn
-    playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
+    playerTurnDiv.textContent = `${activePlayer.name}'s turn...\nPlease place your '${activePlayer.token}'`
 
     // Render board squares
     board.forEach((cell, index) => {
@@ -134,8 +134,8 @@ const screenController = (() => {
     // Make sure I've clicked a column and not the gaps in between
     if (!selectedCell) return;
     if (game.getBoard()[selectedCell].isOccupied()) return message().occupied();
-    game.playRound(selectedCell);
-    updateScreen();
+    let gameStatus = game.playRound(selectedCell);
+    updateScreen(gameStatus);
   }
   boardDiv.addEventListener("click", clickHandlerBoard);
 
