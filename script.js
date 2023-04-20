@@ -25,6 +25,13 @@ const gameboard = (() => {
 
   const getBoard = () => board;
 
+  const resetBoard = () => {
+    board.length = 0;
+    for (let i = 0; i < rows * columns; i++) {
+      board.push(Cell());
+    };
+  }
+
   const printBoard = () => {
     const boardWithCellValues = board.map((cell) => cell.getValue());
     console.log(boardWithCellValues);
@@ -34,7 +41,7 @@ const gameboard = (() => {
     board[i].addToken(player);
   };
 
-  return {printBoard, getBoard, displayToken};
+  return {printBoard, getBoard, resetBoard, displayToken};
 })();
 
 const Player = (name, token) => {
@@ -97,7 +104,7 @@ const GameController = () => {
     if (gameOver()) return gameOver();
     switchPlayerTurn();
   }
-  return {getBoard: board.getBoard, getActivePlayer, playRound};
+  return {getBoard: board.getBoard, getActivePlayer, switchPlayerTurn, playRound};
 }
 
 const screenController = (() => {
@@ -138,8 +145,16 @@ const screenController = (() => {
     if (!selectedCell) return;
     if (game.getBoard()[selectedCell].isOccupied()) return message().occupied();
     let gameStatus = game.playRound(selectedCell);
-    console.log(gameStatus);
     updateScreen(gameStatus);
+  }
+
+  // Add event listener for playing again
+  const resetGame = () => {
+    game.switchPlayerTurn()
+    gameboard.resetBoard();
+    updateScreen();
+    document.querySelector('.btn-success').remove()
+    boardDiv.addEventListener("click", clickHandlerBoard);
   }
 
   const endGame = (gameStatus) => {
@@ -150,6 +165,7 @@ const screenController = (() => {
     againButton.classList.add("btn-success")
     againButton.textContent = 'Play Again?'
     document.querySelector('.play-again').appendChild(againButton);
+    againButton.addEventListener("click", resetGame)
   }
 
   boardDiv.addEventListener("click", clickHandlerBoard);
