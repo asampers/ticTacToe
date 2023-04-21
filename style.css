@@ -7,6 +7,7 @@
     grid-template-rows: repeat(3,1fr);
     /*background: rgb(12, 218, 190);*/
     border: 5px solid black;
+    background: lightyellow;
     border-radius: 4px;
 }    
 

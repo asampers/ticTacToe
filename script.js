@@ -118,7 +118,8 @@ const screenController = (() => {
   const playerInfoDiv = document.querySelector('.info');
   const boardDiv = document.querySelector('#gameboard');
   const playerForm = document.querySelector('.player-form');
-  
+  const playAgain = document.querySelector('.play-again');
+
   playerInfoDiv.textContent = "Please enter player names.";
   
   playerForm.addEventListener("submit", (event) => {
@@ -128,6 +129,7 @@ const screenController = (() => {
     const player1 = Player((formValue.player1Name.value), "X");
     const player2 = Player((formValue.player2Name.value), "O");
     game.addPlayer(player1, player2);
+    playerForm.reset();
     playerForm.classList.add("d-none");
     // Initial render
     updateScreen();
@@ -174,20 +176,40 @@ const screenController = (() => {
     game.switchPlayerTurn()
     gameboard.resetBoard();
     updateScreen();
-    document.querySelector('.again').remove()
+    while (playAgain.firstChild) {
+      playAgain.removeChild(playAgain.firstChild);
+    }
     boardDiv.addEventListener("click", clickHandlerBoard);
   }
 
+  const refreshPage = () => {
+    location.reload();
+  }
+
+  function makePlayAgainBtn() {
+    const againButton = document.createElement("button");
+    againButton.classList.add("btn", "btn-success", "again", "me-3");
+    againButton.textContent = 'Play Again?';
+    againButton.addEventListener("click", resetGame);
+    return againButton;
+  }
+
+  function makeNewPlayerBtn() {
+    const newPlayers = document.createElement("button");
+    newPlayers.classList.add("btn", "btn-info", "again");
+    newPlayers.textContent = "Get New Players.";
+    newPlayers.addEventListener('click', refreshPage);
+    return newPlayers;
+  }
+
+  function addEndGameBtns() {
+    playAgain.append((makePlayAgainBtn()), (makeNewPlayerBtn()));
+  }
+  
   const endGame = (gameStatus) => {
     playerInfoDiv.textContent = message((game.getActivePlayer().name)).displayOutcome(gameStatus);
     boardDiv.removeEventListener("click", clickHandlerBoard);
-    const againButton = document.createElement("button");
-    againButton.classList.add("btn")
-    againButton.classList.add("btn-success")
-    againButton.classList.add("again")
-    againButton.textContent = 'Play Again?'
-    document.querySelector('.play-again').appendChild(againButton);
-    againButton.addEventListener("click", resetGame)
+    addEndGameBtns();
   }
 
   boardDiv.addEventListener("click", clickHandlerBoard);
