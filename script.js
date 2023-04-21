@@ -73,10 +73,16 @@ const GameController = () => {
   const board = gameboard;
   const players = [];
   const winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
-  let activePlayer = players[0];
+  let activePlayer;
 
   const getActivePlayer = () => activePlayer;
   
+  const addPlayer = (player1, player2) => {
+    players.push(player1)
+    players.push(player2)
+    activePlayer = players[0];
+  }
+
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   }
@@ -104,17 +110,29 @@ const GameController = () => {
     if (gameOver()) return gameOver();
     switchPlayerTurn();
   }
-  return {getBoard: board.getBoard, getActivePlayer, switchPlayerTurn, playRound};
+  return {getBoard: board.getBoard, getActivePlayer, addPlayer, switchPlayerTurn, playRound};
 }
 
 const screenController = (() => {
   const game = GameController();
   const playerInfoDiv = document.querySelector('.info');
   const boardDiv = document.querySelector('#gameboard');
+  const playerForm = document.querySelector('.player-form');
+  
 
-  const getPlayers = () => {
-    playerInfoDiv.textContent = "Please enter player names."
-  }
+  playerInfoDiv.textContent = "Please enter player names.";
+  
+  playerForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    
+    let formValue = event.target.elements;
+    console.log(formValue.player1Name.value);
+    const player1 = Player((formValue.player1Name.value), "X");
+    const player2 = Player((formValue.player2Name.value), "O");
+    game.addPlayer(player1, player2);
+    playerForm.classList.add("d-none");
+    console.log(game.getActivePlayer());
+  })
 
   const updateScreen = (gameStatus) => {
     // clear the board
@@ -173,9 +191,9 @@ const screenController = (() => {
   }
 
   boardDiv.addEventListener("click", clickHandlerBoard);
-
-  getPlayers()
+  
   // Initial render
   //updateScreen();
+  return { game };
 })();
 
