@@ -119,19 +119,18 @@ const screenController = (() => {
   const boardDiv = document.querySelector('#gameboard');
   const playerForm = document.querySelector('.player-form');
   
-
   playerInfoDiv.textContent = "Please enter player names.";
   
   playerForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    
     let formValue = event.target.elements;
     console.log(formValue.player1Name.value);
     const player1 = Player((formValue.player1Name.value), "X");
     const player2 = Player((formValue.player2Name.value), "O");
     game.addPlayer(player1, player2);
     playerForm.classList.add("d-none");
-    console.log(game.getActivePlayer());
+    // Initial render
+    updateScreen();
   })
 
   const updateScreen = (gameStatus) => {
@@ -156,7 +155,7 @@ const screenController = (() => {
       endGame(gameStatus);
     } else {
     // Display player's turn
-    playerInfoDiv.textContent = `${activePlayer.name}'s turn...\nPlease place your '${activePlayer.token}'`
+    playerInfoDiv.textContent = `${activePlayer.name}'s turn... Please place your '${activePlayer.token}'`
     }
   }
 
@@ -175,7 +174,7 @@ const screenController = (() => {
     game.switchPlayerTurn()
     gameboard.resetBoard();
     updateScreen();
-    document.querySelector('.btn-success').remove()
+    document.querySelector('.again').remove()
     boardDiv.addEventListener("click", clickHandlerBoard);
   }
 
@@ -185,15 +184,12 @@ const screenController = (() => {
     const againButton = document.createElement("button");
     againButton.classList.add("btn")
     againButton.classList.add("btn-success")
+    againButton.classList.add("again")
     againButton.textContent = 'Play Again?'
     document.querySelector('.play-again').appendChild(againButton);
     againButton.addEventListener("click", resetGame)
   }
 
   boardDiv.addEventListener("click", clickHandlerBoard);
-  
-  // Initial render
-  //updateScreen();
-  return { game };
 })();
 
