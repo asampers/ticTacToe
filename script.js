@@ -34,7 +34,6 @@ const gameboard = (() => {
 
   const printBoard = () => {
     const boardWithCellValues = board.map((cell) => cell.getValue());
-    console.log(boardWithCellValues);
   };
 
   const displayToken = (i, player) => {
@@ -125,7 +124,6 @@ const screenController = (() => {
   playerForm.addEventListener("submit", (event) => {
     event.preventDefault();
     let formValue = event.target.elements;
-    console.log(formValue.player1Name.value);
     const player1 = Player((formValue.player1Name.value), "X");
     const player2 = Player((formValue.player2Name.value), "O");
     game.addPlayer(player1, player2);
@@ -205,7 +203,7 @@ const screenController = (() => {
   function addEndGameBtns() {
     playAgain.append((makePlayAgainBtn()), (makeNewPlayerBtn()));
   }
-  
+
   const endGame = (gameStatus) => {
     playerInfoDiv.textContent = message((game.getActivePlayer().name)).displayOutcome(gameStatus);
     boardDiv.removeEventListener("click", clickHandlerBoard);
