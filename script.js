@@ -71,7 +71,7 @@ const message = ((player) => {
 
 const GameController = () => {
   const board = gameboard;
-  const players = [Player('anna','X'), Player('andrew', 'O')];
+  const players = [];
   const winCombos = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
   let activePlayer = players[0];
 
@@ -109,8 +109,12 @@ const GameController = () => {
 
 const screenController = (() => {
   const game = GameController();
-  const playerTurnDiv = document.querySelector('.turn');
+  const playerInfoDiv = document.querySelector('.info');
   const boardDiv = document.querySelector('#gameboard');
+
+  const getPlayers = () => {
+    playerInfoDiv.textContent = "Please enter player names."
+  }
 
   const updateScreen = (gameStatus) => {
     // clear the board
@@ -134,7 +138,7 @@ const screenController = (() => {
       endGame(gameStatus);
     } else {
     // Display player's turn
-    playerTurnDiv.textContent = `${activePlayer.name}'s turn...\nPlease place your '${activePlayer.token}'`
+    playerInfoDiv.textContent = `${activePlayer.name}'s turn...\nPlease place your '${activePlayer.token}'`
     }
   }
 
@@ -158,7 +162,7 @@ const screenController = (() => {
   }
 
   const endGame = (gameStatus) => {
-    playerTurnDiv.textContent = message((game.getActivePlayer().name)).displayOutcome(gameStatus);
+    playerInfoDiv.textContent = message((game.getActivePlayer().name)).displayOutcome(gameStatus);
     boardDiv.removeEventListener("click", clickHandlerBoard);
     const againButton = document.createElement("button");
     againButton.classList.add("btn")
@@ -170,8 +174,8 @@ const screenController = (() => {
 
   boardDiv.addEventListener("click", clickHandlerBoard);
 
+  getPlayers()
   // Initial render
-  updateScreen();
-  return{game};
+  //updateScreen();
 })();
 

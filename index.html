@@ -11,7 +11,22 @@
 </head>
 <body>
   <h1 class="text-primary text-center mt-3">Let's Play Tic Tac Toe!</h1>
-  <h2 class="turn text-center mt-3"></h2>
+  <div class="d-flex-column justify-content-center">
+    <h2 class="info text-center mt-3"></h2>
+    <form class="player-form">
+      <div class="d-flex justify-content-center mb-3">
+        <div class="form-floating me-2">
+          <input type="text" class="form-control border border-primary rounded" id="player1Name" placeholder="Jane">
+          <label for="floatingInput">Player1 Name:</label>
+        </div>
+        <div class="form-floating me-2">
+          <input type="text" class="form-control border border-primary rounded" id="player2Name" placeholder="John">
+          <label for="floatingPassword">Player2 Name:</label>
+        </div>
+        <button type="submit" class="btn btn-sm btn-success border border-2 border-dark">Create<br>Players!</button>
+      </div>
+    </form>
+  </div>  
   <div id="gameboard"></div>
   <div class="play-again d-flex justify-content-center mt-3"></div>
 </body>
