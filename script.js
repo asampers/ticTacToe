@@ -195,7 +195,7 @@ const screenController = (() => {
   function makeNewPlayerBtn() {
     const newPlayers = document.createElement("button");
     newPlayers.classList.add("btn", "btn-info", "again");
-    newPlayers.textContent = "Get New Players.";
+    newPlayers.textContent = "Get New Players?";
     newPlayers.addEventListener('click', refreshPage);
     return newPlayers;
   }
